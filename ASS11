@@ -1,0 +1,46 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp"
+    android:background="#FFFFFF">
+
+    <!-- Result percentage -->
+    <TextView
+        android:id="@+id/tvPercentage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="28sp"
+        android:textColor="#4CAF50"
+        android:textStyle="bold"
+        android:layout_marginBottom="10dp" />
+
+    <!-- Status (Passed/Failed) -->
+    <TextView
+        android:id="@+id/tvStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:textColor="#4CAF50"
+        android:layout_marginBottom="20dp" />
+
+    <!-- Trophy image -->
+    <ImageView
+        android:id="@+id/ivResultImage"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/trophy"
+        android:layout_marginBottom="20dp"
+        android:contentDescription="Result image" />
+
+    <!-- Congratulations text -->
+    <TextView
+        android:id="@+id/tvMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Congratulations! You are passed."
+        android:textSize="18sp"
+        android:textColor="#000000" />
+</LinearLayout>
