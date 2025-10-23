@@ -1,0 +1,74 @@
+import 'package:flutter/material.dart';
+import 'dart:math';
+
+void main() {
+  runApp(const ColorChangingTextApp());
+}
+
+class ColorChangingTextApp extends StatefulWidget {
+  const ColorChangingTextApp({Key? key}) : super(key: key);
+
+  @override
+  State<ColorChangingTextApp> createState() => _ColorChangingTextAppState();
+}
+
+class _ColorChangingTextAppState extends State<ColorChangingTextApp> {
+  Color _textColor = Colors.black; // Initial color
+
+  // List of colors to choose from
+  final List<Color> _colors = [
+    Colors.black,
+    Colors.red,
+    Colors.blue,
+    Colors.green,
+    Colors.orange,
+    Colors.purple,
+  ];
+
+  final Random _random = Random();
+
+  void _changeTextColor() {
+    setState(() {
+      // Pick a random color different from current
+      Color newColor;
+      do {
+        newColor = _colors[_random.nextInt(_colors.length)];
+      } while (newColor == _textColor);
+
+      _textColor = newColor;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Change Text Color Demo',
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Change Text Color'),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Hello, World!',
+                style: TextStyle(fontSize: 24, color: _textColor),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Press the button to change my color',
+                style: TextStyle(fontSize: 20, color: _textColor),
+              ),
+              const SizedBox(height: 40),
+              ElevatedButton(
+                onPressed: _changeTextColor,
+                child: const Text('Change Text Color'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
