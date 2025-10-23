@@ -1,0 +1,184 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+// Dedicated route generator class
+class RouteGenerator {
+  static Route<dynamic> generateRoute(RouteSettings settings) {
+    switch (settings.name) {
+      case '/':
+        return MaterialPageRoute(builder: (_) => const HomeScreen());
+      case '/about':
+        // Extract arguments as a Map
+        final args = settings.arguments as Map<String, dynamic>?;
+
+        // Provide defaults if args missing
+        final Color scaffoldColor = args?['scaffoldColor'] ?? Colors.white;
+        final Color appBarColor = args?['appBarColor'] ?? Colors.blue;
+
+        return MaterialPageRoute(
+          builder: (_) => AboutScreen(
+            scaffoldColor: scaffoldColor,
+            appBarColor: appBarColor,
+          ),
+        );
+      default:
+        return MaterialPageRoute(
+          builder: (_) => const Scaffold(
+            body: Center(child: Text('No route defined')),
+          ),
+        );
+    }
+  }
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Routing with Arguments',
+      debugShowCheckedModeBanner: false,
+      initialRoute: '/',
+      onGenerateRoute: RouteGenerator.generateRoute,
+    );
+  }
+}
+
+// Home Screen
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  Color scaffoldColor = Colors.white;
+  Color appBarColor = Colors.blue;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Home Screen')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            // Display current colors
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Scaffold Color:', style: Theme.of(context).textTheme.subtitle1),
+                Container(
+                  width: 50,
+                  height: 20,
+                  color: scaffoldColor,
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('AppBar Color:', style: Theme.of(context).textTheme.subtitle1),
+                Container(
+                  width: 50,
+                  height: 20,
+                  color: appBarColor,
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 30),
+
+            // Buttons to change colors (just a few preset colors)
+            Wrap(
+              spacing: 10,
+              children: [
+                ElevatedButton(
+                  onPressed: () => setState(() => scaffoldColor = Colors.white),
+                  child: const Text('White Scaffold'),
+                ),
+                ElevatedButton(
+                  onPressed: () => setState(() => scaffoldColor = Colors.yellow.shade100),
+                  child: const Text('Yellow Scaffold'),
+                ),
+                ElevatedButton(
+                  onPressed: () => setState(() => scaffoldColor = Colors.green.shade100),
+                  child: const Text('Green Scaffold'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Wrap(
+              spacing: 10,
+              children: [
+                ElevatedButton(
+                  onPressed: () => setState(() => appBarColor = Colors.blue),
+                  child: const Text('Blue AppBar'),
+                ),
+                ElevatedButton(
+                  onPressed: () => setState(() => appBarColor = Colors.red),
+                  child: const Text('Red AppBar'),
+                ),
+                ElevatedButton(
+                  onPressed: () => setState(() => appBarColor = Colors.purple),
+                  child: const Text('Purple AppBar'),
+                ),
+              ],
+            ),
+
+            const Spacer(),
+
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(
+                  context,
+                  '/about',
+                  arguments: {
+                    'scaffoldColor': scaffoldColor,
+                    'appBarColor': appBarColor,
+                  },
+                );
+              },
+              child: const Text('Go to About Screen'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// About Screen receiving colors from Home screen
+class AboutScreen extends StatelessWidget {
+  final Color scaffoldColor;
+  final Color appBarColor;
+
+  const AboutScreen({
+    Key? key,
+    required this.scaffoldColor,
+    required this.appBarColor,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: scaffoldColor,
+      appBar: AppBar(
+        backgroundColor: appBarColor,
+        title: const Text('About Screen'),
+      ),
+      body: const Center(
+        child: Text(
+          'This is the About Screen',
+          style: TextStyle(fontSize: 24),
+        ),
+      ),
+    );
+  }
+}
