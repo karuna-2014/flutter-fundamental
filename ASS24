@@ -1,0 +1,102 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:audioplayers/audioplayers.dart';
+
+// Provider for the current color and note index
+final appStateProvider = StateNotifierProvider<AppStateNotifier, AppState>(
+  (ref) => AppStateNotifier(),
+);
+
+// State class holding scaffold/appbar color and note index
+class AppState {
+  final Color color;
+  final int noteIndex;
+
+  AppState({required this.color, required this.noteIndex});
+
+  AppState copyWith({Color? color, int? noteIndex}) {
+    return AppState(
+      color: color ?? this.color,
+      noteIndex: noteIndex ?? this.noteIndex,
+    );
+  }
+}
+
+// StateNotifier to manage app state
+class AppStateNotifier extends StateNotifier<AppState> {
+  AppStateNotifier()
+      : super(AppState(color: Colors.blue, noteIndex: 0));
+
+  // List of colors to cycle through
+  final List<Color> colors = [
+    Colors.blue,
+    Colors.red,
+    Colors.green,
+    Colors.orange,
+    Colors.purple,
+    Colors.teal,
+    Colors.brown,
+    Colors.indigo,
+    Colors.pink,
+    Colors.cyan,
+  ];
+
+  // List of music note asset paths
+  final List<String> notes = [
+    'assets/note1.wav',
+    'assets/note2.wav',
+    'assets/note3.wav',
+    'assets/note4.wav',
+    'assets/note5.wav',
+    'assets/note6.wav',
+    'assets/note7.wav',
+    'assets/note8.wav',
+    'assets/note9.wav',
+    'assets/note10.wav',
+  ];
+
+  final AudioPlayer _player = AudioPlayer();
+
+  Future<void> playNext() async {
+    int nextIndex = (state.noteIndex + 1) % notes.length;
+
+    // Play the audio note
+    await _player.play(AssetSource(notes[nextIndex]));
+
+    // Update color and noteIndex state
+    state = state.copyWith(
+      color: colors[nextIndex],
+      noteIndex: nextIndex,
+    );
+  }
+}
+
+void main() {
+  runApp(const ProviderScope(child: MyApp()));
+}
+
+class MyApp extends ConsumerWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appState = ref.watch(appStateProvider);
+
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        backgroundColor: appState.color,
+        appBar: AppBar(
+          backgroundColor: appState.color,
+          title: const Text('Riverpod Music Notes'),
+        ),
+        body: Center(
+          child: ElevatedButton(
+            onPressed: () => ref.read(appStateProvider.notifier).playNext(),
+            child: const Text('Play Next Note & Change Color'),
+          ),
+        ),
+      ),
+    );
+  }
+}
