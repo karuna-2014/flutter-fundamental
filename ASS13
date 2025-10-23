@@ -1,0 +1,49 @@
+import 'dart:async';
+import 'package:flutter/material.dart';
+
+class OneSecondClock extends StatefulWidget {
+  @override
+  _OneSecondClockState createState() => _OneSecondClockState();
+}
+
+class _OneSecondClockState extends State<OneSecondClock> {
+  String _currentTime = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _startClock();
+  }
+
+  void _startClock() {
+    // Initialize with the current time
+    _currentTime = _getFormattedTime();
+
+    // Run for only 1 second, then update time once
+    Timer(Duration(seconds: 1), () {
+      setState(() {
+        _currentTime = _getFormattedTime();
+      });
+    });
+  }
+
+  String _getFormattedTime() {
+    final now = DateTime.now();
+    return "${now.hour.toString().padLeft(2, '0')}:"
+           "${now.minute.toString().padLeft(2, '0')}:"
+           "${now.second.toString().padLeft(2, '0')}";
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("1-Second Clock")),
+      body: Center(
+        child: Text(
+          _currentTime,
+          style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+  }
+}
