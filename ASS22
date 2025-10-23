@@ -1,0 +1,99 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const NumberApp());
+}
+
+class NumberApp extends StatefulWidget {
+  const NumberApp({Key? key}) : super(key: key);
+
+  @override
+  State<NumberApp> createState() => _NumberAppState();
+}
+
+class _NumberAppState extends State<NumberApp> {
+  int number = 0;
+
+  void incrementNumber() {
+    setState(() {
+      number++;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Two Screen Number App',
+      debugShowCheckedModeBanner: false,
+      initialRoute: '/',
+      routes: {
+        '/': (context) => HomeScreen(
+              number: number,
+              incrementNumber: incrementNumber,
+            ),
+        '/screen2': (context) => Screen2(number: number),
+      },
+    );
+  }
+}
+
+// Home Screen with floating button to increment
+class HomeScreen extends StatelessWidget {
+  final int number;
+  final VoidCallback incrementNumber;
+
+  const HomeScreen({
+    Key? key,
+    required this.number,
+    required this.incrementNumber,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Home Screen'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.navigate_next),
+            tooltip: 'Go to Screen 2',
+            onPressed: () => Navigator.pushNamed(context, '/screen2'),
+          )
+        ],
+      ),
+      body: Center(
+        child: Text(
+          'Number: $number',
+          style: const TextStyle(fontSize: 40),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: incrementNumber,
+        child: const Icon(Icons.add),
+        tooltip: 'Increment Number',
+      ),
+    );
+  }
+}
+
+// Second screen showing the same number
+class Screen2 extends StatelessWidget {
+  final int number;
+
+  const Screen2({Key? key, required this.number}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Screen 2'),
+      ),
+      body: Center(
+        child: Text(
+          'Number: $number',
+          style: const TextStyle(fontSize: 40),
+        ),
+      ),
+    );
+  }
+}
