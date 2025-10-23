@@ -1,0 +1,59 @@
+class RotatingImageExample extends StatefulWidget {
+  const RotatingImageExample({Key? key}) : super(key: key);
+
+  @override
+  State<RotatingImageExample> createState() => _RotatingImageExampleState();
+}
+
+class _RotatingImageExampleState extends State<RotatingImageExample>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  bool isClockwise = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize the AnimationController
+    _controller = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    )..repeat(); // Continuously rotates
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  // Function to toggle rotation direction
+  void _toggleRotation() {
+    setState(() {
+      isClockwise = !isClockwise;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Rotate Image Clock')),
+      body: Center(
+        child: RotationTransition(
+          turns: Tween(begin: 0.0, end: isClockwise ? 1.0 : -1.0)
+              .animate(_controller),
+          child: Image.asset(
+            'assets/clock.png', // replace with your image asset
+            width: 200,
+            height: 200,
+          ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _toggleRotation,
+        label: Text(isClockwise ? 'Rotate Anticlockwise' : 'Rotate Clockwise'),
+        icon: const Icon(Icons.rotate_right),
+      ),
+    );
+  }
+}
